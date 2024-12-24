@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * packageName    : com.lecture.springmasters.domain.message.controller fileName       :
- * MessageController author         : LEE KYUHEON date           : 24. 12. 24. description    :
+ * UserController author         : LEE KYUHEON date           : 24. 12. 24. description    :
  * =========================================================== DATE              AUTHOR NOTE
  * -----------------------------------------------------------
  * 24. 12. 24.        LEE KYUHEON       최초 생성
  */
-@RestController("/messages")
+@RestController
+@RequestMapping("/messages")
 public class MessageController {
 
   private final MessageService messageService;
