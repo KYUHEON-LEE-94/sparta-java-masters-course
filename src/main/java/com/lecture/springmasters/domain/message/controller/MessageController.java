@@ -1,7 +1,10 @@
 package com.lecture.springmasters.domain.message.controller;
 
+import com.lecture.springmasters.common.ApiResponse;
 import com.lecture.springmasters.domain.message.service.MessageService;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +31,8 @@ public class MessageController {
   }
 
   @GetMapping
-  public ResponseEntity<?> findMessages() {
-    return ResponseEntity.ok("message");
+  public ApiResponse<List<String>> findMessages() {
+    return ApiResponse.Success(new ArrayList<>());
   }
 
   @PostMapping
