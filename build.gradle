@@ -24,38 +24,45 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.mysql:mysql-connector-j'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    //undertow - Node보다도 성능이 좋고 경량화되었다.
+    // Undertow 설정
     implementation('org.springframework.boot:spring-boot-starter-web') {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat' // Tomcat 제거
     }
+    implementation 'org.springframework.boot:spring-boot-starter-undertow' // Undertow 추가
 
-    //swagger
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // DevTools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // MySQL Connector
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-    //DB 형상 관리
+    // Flyway DB Migration
     implementation 'org.flywaydb:flyway-mysql'
     implementation 'org.flywaydb:flyway-core'
 
-    //MapStruct: DTO와 Entity 간 객체 변환을 간단하고 효율적으로 처리하여 코드 중복을 줄여줍니다.
+    // MapStruct
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
-    //OpenFeign - 3.1 이상 버전은 아직 spring cloud에서 제대로 지원하는 버전이 없어서 github에서 가져옴
+    // OpenFeign
     implementation 'io.github.openfeign:feign-core:13.0'
     implementation 'io.github.openfeign:feign-jackson:13.0'
     implementation 'io.github.openfeign:feign-okhttp:13.0'
     implementation 'io.github.openfeign.form:feign-form:3.8.0'
 
-
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
