@@ -1,0 +1,2 @@
+ALTER TABLE example
+    ADD COLUMN status VARCHAR(50);
