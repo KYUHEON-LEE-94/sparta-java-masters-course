@@ -1,9 +1,12 @@
 package com.lecture.springmasters.domain.user.service;
 
+import com.lecture.springmasters.common.exception.ServiceException;
+import com.lecture.springmasters.common.exception.ServiceExceptionCode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,6 +37,11 @@ public class UserService {
     users.put(username, password);
     userList.add(users);
     return userList;
+  }
+
+  public String ThrowErrorTest() {
+    return Optional.<String>empty()
+        .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
   }
 
   private void setUsers(HashMap<String, String> users) {

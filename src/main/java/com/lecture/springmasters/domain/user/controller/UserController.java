@@ -38,6 +38,11 @@ public class UserController {
     return ApiResponse.ResponseSuccess(users);
   }
 
+  @GetMapping("/error")
+  public String errorTest() {
+    return userService.ThrowErrorTest();
+  }
+
   @PostMapping
   public ResponseEntity<ApiResponse<List<Map<String, String>>>> createUsers(
       @RequestBody HashMap<String, String> users) {
