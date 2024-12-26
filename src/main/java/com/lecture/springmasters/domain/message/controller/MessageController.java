@@ -3,9 +3,11 @@ package com.lecture.springmasters.domain.message.controller;
 import com.lecture.springmasters.common.ApiResponse;
 import com.lecture.springmasters.domain.message.dto.MessageRequest;
 import com.lecture.springmasters.domain.message.service.MessageService;
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,22 +27,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/messages")
+@RequiredArgsConstructor
 public class MessageController {
 
   private final MessageService messageService;
-
-  public MessageController(MessageService messageService) {
-    this.messageService = messageService;
-  }
-
+  
   @GetMapping
   public ApiResponse<List<String>> findMessages() {
     return ApiResponse.Success(new ArrayList<>());
   }
 
   @PostMapping
-  public ResponseEntity<?> createMessages(@RequestBody MessageRequest message) {
-    return ResponseEntity.ok(message);
+  public ResponseEntity<?> createMessages(@Valid @RequestBody MessageRequest message) {
+    return ResponseEntity.ok(message.getTitle());
   }
 
   @PutMapping("/{id}")
