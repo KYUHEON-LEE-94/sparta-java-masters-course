@@ -15,27 +15,20 @@ import org.springframework.http.ResponseEntity;
 public class ApiResponse<T> {
 
   private final Boolean reuslt;
-  private final String error;
-  private final String errorMessage;
-  //어느 타입이든 받을 수 있도록 할것이다.
+  private final Error error;
   private final T message;
 
-  public ApiResponse(Boolean reuslt, String error, String errorMessage, T message) {
+  public ApiResponse(Boolean reuslt, String errorCode, String errorMessage, T message) {
     this.reuslt = reuslt;
-    this.error = error;
-    this.errorMessage = errorMessage;
+    this.error = Error.builder()
+        .errorCode(errorCode)
+        .errorMessage(errorMessage)
+        .build();
     this.message = message;
   }
 
   public static <T> ApiResponse<T> Success(T message) {
     return new ApiResponse<>(true, null, null, message);
-  }
-
-  /**
-   * ResponseEntity의 상태값 활용을 하고 싶으니, 아래와 같이 ResponseEntity 를 감싸서 내리면 좋다.
-   **/
-  public static <T> ResponseEntity<ApiResponse<T>> ResponseSuccess(T message) {
-    return ResponseEntity.ok(new ApiResponse<>(true, null, null, message));
   }
 
   public static <T> ResponseEntity<ApiResponse<T>> ResponseException(String code,
@@ -45,7 +38,7 @@ public class ApiResponse<T> {
 
   public static <T> ResponseEntity<ApiResponse<T>> ValidException(String code,
       String errorMessage) {
-    return ResponseEntity.ok(new ApiResponse<>(false, code, errorMessage, null));
+    return ResponseEntity.status(400).body(new ApiResponse<>(false, code, errorMessage, null));
   }
 
   public static <T> ResponseEntity<ApiResponse<T>> ServerException(String code,

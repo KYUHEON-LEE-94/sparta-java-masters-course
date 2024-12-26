@@ -5,7 +5,6 @@ import com.lecture.springmasters.domain.user.service.UserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,10 +31,9 @@ public class UserController {
   }
 
   @GetMapping
-  public ResponseEntity
-      <ApiResponse<List<Map<String, String>>>> findUsers() {
+  public ApiResponse<List<Map<String, String>>> findUsers() {
     List<Map<String, String>> users = userService.getUsers();
-    return ApiResponse.ResponseSuccess(users);
+    return ApiResponse.Success(users);
   }
 
   @GetMapping("/error")
@@ -44,18 +42,20 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<List<Map<String, String>>>> createUsers(
+  public ApiResponse
+      <List<Map<String, String>>> createUsers(
       @RequestBody HashMap<String, String> users) {
     List<Map<String, String>> responseUsers = userService.createUser(users);
-    return ApiResponse.ResponseSuccess(responseUsers);
+    return ApiResponse.Success(responseUsers);
   }
 
   @PutMapping("/{username}")
-  public ResponseEntity<ApiResponse<List<Map<String, String>>>> updateUsers(
+  public ApiResponse
+      <List<Map<String, String>>> updateUsers(
       @PathVariable String username,
       @RequestBody HashMap<String, String> password) {
     String ps = password.get("password");
     List<Map<String, String>> responseUsers = userService.updateUser(username, ps);
-    return ApiResponse.ResponseSuccess(responseUsers);
+    return ApiResponse.Success(responseUsers);
   }
 }

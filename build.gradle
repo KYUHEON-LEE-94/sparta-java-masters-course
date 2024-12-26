@@ -49,6 +49,10 @@ dependencies {
     // Flyway DB Migration
     implementation 'org.flywaydb:flyway-mysql'
     implementation 'org.flywaydb:flyway-core'
+    
+    //Validation
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    implementation 'org.hibernate.validator:hibernate-validator:7.0.2.Final'
 
     // MapStruct
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'

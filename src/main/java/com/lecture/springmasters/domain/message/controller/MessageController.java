@@ -1,6 +1,7 @@
 package com.lecture.springmasters.domain.message.controller;
 
 import com.lecture.springmasters.common.ApiResponse;
+import com.lecture.springmasters.domain.message.dto.MessageRequest;
 import com.lecture.springmasters.domain.message.service.MessageService;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +39,8 @@ public class MessageController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createMessages(@RequestBody HashMap<String, String> message) {
-    return ResponseEntity.ok("message");
+  public ResponseEntity<?> createMessages(@RequestBody MessageRequest message) {
+    return ResponseEntity.ok(message);
   }
 
   @PutMapping("/{id}")
