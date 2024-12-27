@@ -1,8 +1,10 @@
-package com.lecture.springmasters.domain.message.user.repository;
+package com.lecture.springmasters.domain.user.repository;
 
-import com.lecture.springmasters.domain.message.user.entity.User;
+import com.lecture.springmasters.domain.user.entity.User;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   List<User> findAllByUsernameOrEmailOrderByIdDesc(String username, String email);
 
   Optional<User> findByUsernameOrEmailOrderByIdDesc(String username, String email);
+
+  Page<User> findByUsername(String username, Pageable pageable);
 }

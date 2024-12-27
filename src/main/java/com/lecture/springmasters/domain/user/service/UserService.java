@@ -1,7 +1,7 @@
-package com.lecture.springmasters.domain.message.user.service;
+package com.lecture.springmasters.domain.user.service;
 
-import com.lecture.springmasters.domain.message.user.entity.User;
-import com.lecture.springmasters.domain.message.user.repository.UserRepository;
+import com.lecture.springmasters.domain.user.entity.User;
+import com.lecture.springmasters.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

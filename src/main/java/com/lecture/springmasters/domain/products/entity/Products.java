@@ -1,4 +1,4 @@
-package com.lecture.springmasters.domain.message.user.entity;
+package com.lecture.springmasters.domain.products.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,33 +30,30 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @DynamicInsert //createAt 동작
 @DynamicUpdate //updateAt 동작
-@Table(name = "users")
+@Table(name = "products")
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class Products {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
   @Setter
-  @Column(nullable = false, length = 50)
-  String username;
+  @Column(nullable = false)
+  String name;
 
   @Column(nullable = false, unique = true)
-  String email;
+  int price;
 
   @Column(nullable = false)
-  String passwordHash;
+  int stock;
 
   @Column(length = 15)
-  String phoneNumber;
+  String categoryId;
 
-  @Column(columnDefinition = "TEXT")
-  String address;
-
-  @Column(length = 20, nullable = false)
-  String role;
+  @Column(nullable = false)
+  Boolean deleted_yn;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -68,18 +65,11 @@ public class User {
 
 
   @Builder
-  public User(
-      String username,
-      String email,
-      String passwordHash,
-      String phoneNumber,
-      String address,
-      String role) {
-    this.username = username;
-    this.email = email;
-    this.passwordHash = passwordHash;
-    this.phoneNumber = phoneNumber;
-    this.address = address;
-    this.role = role;
+  public Products(String categoryId, int stock, int price, String name, Boolean deleted_yn) {
+    this.categoryId = categoryId;
+    this.stock = stock;
+    this.price = price;
+    this.name = name;
+    this.deleted_yn = deleted_yn;
   }
 }
