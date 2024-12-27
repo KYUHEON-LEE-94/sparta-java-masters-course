@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MessageService {
 
-  private final MessageRepository messageRepository;
-
 
   public String getMessage() {
     return "Hello, Spring IoC and DI!";
