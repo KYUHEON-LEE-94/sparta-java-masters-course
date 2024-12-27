@@ -45,8 +45,8 @@ public class MessageController {
   @PutMapping("/{id}")
   public ResponseEntity<?> createMessages(
       @PathVariable Long id,
-      @RequestBody HashMap<String, String> message) {
-    return ResponseEntity.ok("message");
+      @RequestBody MessageRequest message) {
+    return ResponseEntity.ok(message);
   }
 
   @DeleteMapping("/{id}")

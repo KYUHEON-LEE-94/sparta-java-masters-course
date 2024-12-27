@@ -1,5 +1,6 @@
 package com.lecture.springmasters.domain.message.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,7 +12,12 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@RequiredArgsConstructor
 public class MessageService {
+
+  private final MessageRepository messageRepository;
+
+
   public String getMessage() {
     return "Hello, Spring IoC and DI!";
   }
