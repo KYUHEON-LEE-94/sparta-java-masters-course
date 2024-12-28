@@ -66,8 +66,6 @@ public class User {
   @UpdateTimestamp
   LocalDateTime updatedAt;
 
-  Boolean deleted_yn;
-
   @Builder
   public User(
       String username,

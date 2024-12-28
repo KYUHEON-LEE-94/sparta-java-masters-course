@@ -52,9 +52,6 @@ public class Products {
   @Column(length = 15)
   String categoryId;
 
-  @Column(nullable = false)
-  Boolean deleted_yn;
-
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
   LocalDateTime createdAt;
@@ -65,11 +62,10 @@ public class Products {
 
 
   @Builder
-  public Products(String categoryId, int stock, int price, String name, Boolean deleted_yn) {
+  public Products(String categoryId, int stock, int price, String name) {
     this.categoryId = categoryId;
     this.stock = stock;
     this.price = price;
     this.name = name;
-    this.deleted_yn = deleted_yn;
   }
 }

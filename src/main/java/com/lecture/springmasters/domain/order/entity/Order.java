@@ -49,9 +49,6 @@ public class Order {
   @Column(nullable = false, length = 50)
   String status;
 
-  @Column(nullable = false)
-  Boolean deleted_yn;
-
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
   LocalDateTime createdAt;
@@ -62,10 +59,9 @@ public class Order {
 
 
   @Builder
-  public Order(String userId, Long totalPrice, String status, Boolean deleted_yn) {
+  public Order(String userId, Long totalPrice, String status) {
     this.userId = userId;
     this.totalPrice = totalPrice;
     this.status = status;
-    this.deleted_yn = deleted_yn;
   }
 }

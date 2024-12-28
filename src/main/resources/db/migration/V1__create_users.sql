@@ -8,5 +8,4 @@ CREATE TABLE users (
                     role VARCHAR(20) DEFAULT 'customer' COMMENT 'customer, admin',
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                    deleted_yn tinyint(1)
                     );

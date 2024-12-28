@@ -6,5 +6,4 @@ CREATE TABLE products (
                     category_id VARCHAR(15),
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                    deleted_yn tinyint(1)
                     );
