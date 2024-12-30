@@ -1,17 +1,22 @@
-package com.lecture.springmasters.domain.products.entity;
+package com.lecture.springmasters.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.lecture.springmasters.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
@@ -19,38 +24,32 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- * packageName    : com.lecture.springmasters.domain.message.user.entity fileName       : User
- * author         : LEE KYUHEON date           : 24. 12. 27. description    :
+ * packageName    : com.lecture.springmasters.domain.entity fileName       : Order author         :
+ * LEE KYUHEON date           : 24. 12. 30. description    :
  * =========================================================== DATE              AUTHOR NOTE
  * -----------------------------------------------------------
- * 24. 12. 27.        LEE KYUHEON       최초 생성
+ * 24. 12. 30.        LEE KYUHEON       최초 생성
  */
-
-@Getter
 @Entity
-@DynamicInsert //createAt 동작
-@DynamicUpdate //updateAt 동작
-@Table(name = "products")
+@Getter
+@DynamicInsert
+@DynamicUpdate
 @NoArgsConstructor
+@Table(name = "orders")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Products {
+public class Order {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
-  @Setter
-  @Column(nullable = false)
-  String name;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  @JsonBackReference
+  User user;
 
-  @Column(nullable = false, unique = true)
-  int price;
-
-  @Column(nullable = false)
-  int stock;
-
-  @Column(length = 15)
-  String categoryId;
+  @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+  BigDecimal totalPrice;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -60,12 +59,12 @@ public class Products {
   @UpdateTimestamp
   LocalDateTime updatedAt;
 
-
   @Builder
-  public Products(String categoryId, int stock, int price, String name) {
-    this.categoryId = categoryId;
-    this.stock = stock;
-    this.price = price;
-    this.name = name;
+  public Order(
+      User user,
+      BigDecimal totalPrice
+  ) {
+    this.user = user;
+    this.totalPrice = totalPrice;
   }
 }
