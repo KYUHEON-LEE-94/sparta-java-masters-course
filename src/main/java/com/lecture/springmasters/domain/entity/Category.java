@@ -44,12 +44,20 @@ public class Category {
   @Column(name = "name", nullable = false)
   String name;
 
-  @ManyToOne
+  /*객체를 바라보게 되면 객체를 설명하는 단어를 사용*/
+  @ManyToOne // ~~id가 들어가면 보통 ManyToOne
   @JoinColumn(name = "parent_id")
   Category parent;
+//이걸 호출하면 하나의 엔티티와의 연결성을 나타내기 때문에 단수 return
 
+  //실존하는 컬럼이 아니기 때문에 JoinColumn 필요없
   @OneToMany(mappedBy = "parent")
-  List<Category> subcategories;
+  List<Category> categories;
+//내가 만약 이걸 호출하면 여러개의 category가 return 될거잖아? 그러니까 List 형태로 return 받는거지.
+
+  /*category입장에서 내가 product에 쓰이고 있구나? 를 알려주는게 OneToMany*/
+  @OneToMany(mappedBy = "category")
+  List<Product> products;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
