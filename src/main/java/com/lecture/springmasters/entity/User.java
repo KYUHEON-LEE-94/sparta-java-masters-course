@@ -1,20 +1,17 @@
-package com.lecture.springmasters.domain.entity;
+package com.lecture.springmasters.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.lecture.springmasters.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,7 +21,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- * packageName    : com.lecture.springmasters.domain.entity fileName       : Order author         :
+ * packageName    : com.lecture.springmasters.domain.entity fileName       : User author         :
  * LEE KYUHEON date           : 24. 12. 30. description    :
  * =========================================================== DATE              AUTHOR NOTE
  * -----------------------------------------------------------
@@ -35,21 +32,22 @@ import org.hibernate.annotations.UpdateTimestamp;
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor
-@Table(name = "orders")
+@Table(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order {
+public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  @JsonBackReference
-  User user;
+  @Column(name = "name", nullable = false, length = 50)
+  String name;
 
-  @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
-  BigDecimal totalPrice;
+  @Column(name = "email", nullable = false)
+  String email;
+
+  @Column(name = "password", nullable = false)
+  String password;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -59,12 +57,7 @@ public class Order {
   @UpdateTimestamp
   LocalDateTime updatedAt;
 
-  @Builder
-  public Order(
-      User user,
-      BigDecimal totalPrice
-  ) {
-    this.user = user;
-    this.totalPrice = totalPrice;
-  }
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  @JsonManagedReference
+  List<Order> orders;
 }

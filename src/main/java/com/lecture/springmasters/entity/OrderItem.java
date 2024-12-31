@@ -1,4 +1,4 @@
-package com.lecture.springmasters.domain.entity;
+package com.lecture.springmasters.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

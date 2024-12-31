@@ -1,7 +1,9 @@
-package com.lecture.springmasters.domain.entity;
+package com.lecture.springmasters.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,8 +23,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- * packageName    : com.lecture.springmasters.domain.entity fileName       : Product author : LEE
- * KYUHEON date           : 24. 12. 30. description    :
+ * packageName    : com.lecture.springmasters.domain.entity fileName       : Order author         :
+ * LEE KYUHEON date           : 24. 12. 30. description    :
  * =========================================================== DATE              AUTHOR NOTE
  * -----------------------------------------------------------
  * 24. 12. 30.        LEE KYUHEON       최초 생성
@@ -32,29 +34,21 @@ import org.hibernate.annotations.UpdateTimestamp;
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor
-@Table(name = "products")
+@Table(name = "orders")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Product {
+public class Order {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
-  @Column(name = "name", nullable = false)
-  String name;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  @JsonBackReference
+  User user;
 
-  @Column(name = "description", columnDefinition = "TEXT")
-  String description;
-
-  @Column(name = "price", nullable = false, precision = 10, scale = 2)
-  BigDecimal price;
-
-  @Column(name = "stock", nullable = false)
-  Integer stock;
-
-  @ManyToOne
-  @JoinColumn(name = "category_id", nullable = false)
-  Category category;
+  @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+  BigDecimal totalPrice;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -65,17 +59,11 @@ public class Product {
   LocalDateTime updatedAt;
 
   @Builder
-  public Product(
-      String name,
-      String description,
-      BigDecimal price,
-      Integer stock,
-      Category category
+  public Order(
+      User user,
+      BigDecimal totalPrice
   ) {
-    this.name = name;
-    this.description = description;
-    this.price = price;
-    this.stock = stock;
-    this.category = category;
+    this.user = user;
+    this.totalPrice = totalPrice;
   }
 }
