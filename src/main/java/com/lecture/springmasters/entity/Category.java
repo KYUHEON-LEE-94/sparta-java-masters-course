@@ -1,5 +1,6 @@
 package com.lecture.springmasters.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -56,7 +58,9 @@ public class Category {
 //내가 만약 이걸 호출하면 여러개의 category가 return 될거잖아? 그러니까 List 형태로 return 받는거지.
 
   /*category입장에서 내가 product에 쓰이고 있구나? 를 알려주는게 OneToMany*/
+  @BatchSize(size = 10)
   @OneToMany(mappedBy = "category")
+  @JsonBackReference
   List<Product> products;
 
   @Column(name = "created_at", nullable = false, updatable = false)

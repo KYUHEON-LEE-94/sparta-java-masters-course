@@ -17,7 +17,8 @@ spring:
 
   logging:
     level:
-      org.hibernate.SQL: DEBUG
+      org.hibernate.SQL: DEBUG # 실행된 SQL 출력
+      org.hibernate.type.descriptor.sql: TRACE # SQL 파라미터 출력
   application:
     name: week-01
 
