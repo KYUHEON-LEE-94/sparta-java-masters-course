@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
@@ -47,6 +48,7 @@ public class Order {
   @JsonBackReference
   User user;
 
+  @Setter
   @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
   BigDecimal totalPrice;
 
@@ -66,4 +68,5 @@ public class Order {
     this.user = user;
     this.totalPrice = totalPrice;
   }
+
 }
