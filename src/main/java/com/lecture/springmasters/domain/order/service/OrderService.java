@@ -34,6 +34,7 @@ public class OrderService {
 
     Order order = save(request.getUserId());
 
+    //DB에 갱신된 내용을 넣음.
     orderRepository.flush();
 
     BigDecimal totalPrice = BigDecimal.ZERO;
