@@ -4,23 +4,25 @@ import com.lecture.springmasters.common.exception.ServiceException;
 import com.lecture.springmasters.common.exception.ServiceExceptionCode;
 import com.lecture.springmasters.domain.product.dto.ProductRequest;
 import com.lecture.springmasters.domain.product.dto.ProductResponse;
+import com.lecture.springmasters.domain.product.dto.ProductSearchRequest;
 import com.lecture.springmasters.entity.Category;
 import com.lecture.springmasters.entity.Product;
 import com.lecture.springmasters.repository.CategoryRepository;
+import com.lecture.springmasters.repository.ProductQueryRepository;
 import com.lecture.springmasters.repository.ProductRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-/**
- * packageName    : com.lecture.springmasters.domain.product fileName       : ProductService author
- * : LEE KYUHEON date           : 24. 12. 31. description    :
- */
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
   private final ProductRepository productRepository;
+  private final ProductQueryRepository productQueryRepository;
   private final CategoryRepository categoryRepository;
 
   public Boolean save(ProductRequest request) {
@@ -61,5 +63,11 @@ public class ProductService {
             .description(product.getDescription())
             .build())
         .toList();
+  }
+
+  public Page<Product> searchPage(ProductSearchRequest request, Pageable pageable) {
+    return productQueryRepository.search(request.getName(), request.getMinPrice(),
+        request.getMaxPrice(),
+        pageable);
   }
 }

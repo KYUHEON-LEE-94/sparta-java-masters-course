@@ -3,11 +3,16 @@ package com.lecture.springmasters.domain.product.api;
 import com.lecture.springmasters.common.ApiResponse;
 import com.lecture.springmasters.domain.product.dto.ProductRequest;
 import com.lecture.springmasters.domain.product.dto.ProductResponse;
+import com.lecture.springmasters.domain.product.dto.ProductSearchRequest;
 import com.lecture.springmasters.domain.product.service.ProductService;
+import com.lecture.springmasters.entity.Product;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +35,13 @@ public class ProductController {
   public ApiResponse<List<ProductResponse>> findAll() {
     List<ProductResponse> responses = productService.getAll();
     return ApiResponse.Success(responses);
+  }
+
+  @GetMapping("/search")
+  public ApiResponse<Page<Product>> search(@ModelAttribute ProductSearchRequest request,
+      Pageable pageable) {
+    Page<Product> response = productService.searchPage(request, pageable);
+    return ApiResponse.Success(response);
   }
 
   @GetMapping("/{id}")
