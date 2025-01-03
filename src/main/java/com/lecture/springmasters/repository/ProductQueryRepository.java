@@ -1,5 +1,6 @@
 package com.lecture.springmasters.repository;
 
+import static com.lecture.springmasters.entity.QCategory.category;
 import static com.lecture.springmasters.entity.QProduct.product;
 
 import com.lecture.springmasters.entity.Product;
@@ -20,6 +21,7 @@ public class ProductQueryRepository {
 
   public List<Product> search(String name, BigDecimal minPrice, BigDecimal maxPrice) {
     return queryFactory.selectFrom(product)
+        .innerJoin(category).on(category.id.eq(product.category.id))
         .where(
             equalName(name), //null이 들어오면 이 조건절이 무시된
             equalPrice(minPrice, maxPrice)
@@ -28,7 +30,7 @@ public class ProductQueryRepository {
   }
 
   private BooleanExpression equalName(String name) {
-    return StringUtils.hasText(name) ? product.name.eq(name) : null;
+    return StringUtils.hasText(name) ? category.name.eq(name) : null;
   }
 
   private BooleanExpression equalPrice(BigDecimal minPrice, BigDecimal maxPrice) {
