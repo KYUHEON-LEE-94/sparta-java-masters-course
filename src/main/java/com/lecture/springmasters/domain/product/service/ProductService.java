@@ -66,8 +66,14 @@ public class ProductService {
   }
 
   public Page<Product> searchPage(ProductSearchRequest request, Pageable pageable) {
-    return productQueryRepository.search(request.getName(), request.getMinPrice(),
+    return productQueryRepository.searchPage(request.getName(), request.getMinPrice(),
         request.getMaxPrice(),
         pageable);
+  }
+
+  public List
+      <ProductResponse> search(ProductSearchRequest request) {
+    return productQueryRepository.search(request.getName(), request.getMinPrice(),
+        request.getMaxPrice());
   }
 }

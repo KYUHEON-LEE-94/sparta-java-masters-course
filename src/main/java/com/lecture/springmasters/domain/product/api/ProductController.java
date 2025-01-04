@@ -37,10 +37,16 @@ public class ProductController {
     return ApiResponse.Success(responses);
   }
 
-  @GetMapping("/search")
-  public ApiResponse<Page<Product>> search(@ModelAttribute ProductSearchRequest request,
+  @GetMapping("/searchPage")
+  public ApiResponse<Page<Product>> searchPage(@ModelAttribute ProductSearchRequest request,
       Pageable pageable) {
     Page<Product> response = productService.searchPage(request, pageable);
+    return ApiResponse.Success(response);
+  }
+
+  @GetMapping("/search")
+  public ApiResponse<List<ProductResponse>> search(@ModelAttribute ProductSearchRequest request) {
+    List<ProductResponse> response = productService.search(request);
     return ApiResponse.Success(response);
   }
 
