@@ -1,6 +1,7 @@
 package com.lecture.springmasters.domain.category.service;
 
 import com.lecture.springmasters.domain.category.dto.CategoryRequest;
+import com.lecture.springmasters.domain.order.dto.CategoryProductCountRequest;
 import com.lecture.springmasters.domain.order.dto.CategoryProductCountResponse;
 import com.lecture.springmasters.entity.Category;
 import com.lecture.springmasters.repository.CategoryQueryRepository;
@@ -26,7 +27,7 @@ public class CategoryService {
     return true;
   }
 
-  public List<CategoryProductCountResponse> productCounts() {
-    return categoryQueryRepository.productCount();
+  public List<CategoryProductCountResponse> productCounts(CategoryProductCountRequest search) {
+    return categoryQueryRepository.productCount(search);
   }
 }
