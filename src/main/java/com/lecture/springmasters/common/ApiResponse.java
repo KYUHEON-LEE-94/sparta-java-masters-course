@@ -36,15 +36,18 @@ public class ApiResponse<T> {
     return ResponseEntity.ok(new ApiResponse<>(false, code, errorMessage, null));
   }
 
+  /**
+   * 위에서 반환되는 본문이 있기 때문에 ok로 return 보통 Front에서는 result 에러 메시지가 있는지 아닌지만 보는 경우가 있음 error code 보다는 본문에
+   * 내용을 담아서 return 하는 경우 많음
+   **/
   public static <T> ResponseEntity<ApiResponse<T>> ValidException(String code,
       String errorMessage) {
-    return ResponseEntity.status(400).body(new ApiResponse<>(false, code, errorMessage, null));
+    return ResponseEntity.ok(new ApiResponse<>(false, code, errorMessage, null));
   }
 
   public static <T> ResponseEntity<ApiResponse<T>> ServerException(String code,
       String errorMessage) {
-    return ResponseEntity.status(500)
-        .body(new ApiResponse<>(false, code, errorMessage, null));
+    return ResponseEntity.ok(new ApiResponse<>(false, code, errorMessage, null));
   }
 
   @Getter
