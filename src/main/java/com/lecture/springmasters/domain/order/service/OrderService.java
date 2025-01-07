@@ -31,35 +31,10 @@ public class OrderService {
 
   @Transactional
   public Order order(OrderRequest request) {
-
     Order order = save(request.getUserId());
+    List<OrderItem> orderItems = createOrderItems(request, order);
 
-    //DB에 갱신된 내용을 넣음.
-    orderRepository.flush();
-
-    BigDecimal totalPrice = BigDecimal.ZERO;
-    List<OrderItem> orderItems = new ArrayList<>();
-
-    for (OrderProductRequest orderProduct : request.getProducts()) {
-      Product product = productRepository.findById(orderProduct.getId())
-          .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
-
-      if (orderProduct.getQuantity() > product.getStock()) {
-        throw new ServiceException(ServiceExceptionCode.OUT_OF_STOCK_PRODUCT);
-      }
-
-      product.reduceStock(orderProduct.getQuantity());
-      OrderItem orderItem = OrderItem.builder()
-          .product(product)
-          .order(order)
-          .quantity(orderProduct.getQuantity())
-          .price(product.getPrice())
-          .build();
-
-      orderItems.add(orderItem);
-      totalPrice = totalPrice.add(product.getPrice());
-    }
-
+    BigDecimal totalPrice = calculateTotalPrice(orderItems);
     order.setTotalPrice(totalPrice);
 
     orderItemRepository.saveAll(orderItems);
@@ -75,5 +50,43 @@ public class OrderService {
         .totalPrice(BigDecimal.ZERO)
         .build());
   }
+
+  private List<OrderItem> createOrderItems(OrderRequest request, Order order) {
+    List<OrderItem> orderItems = new ArrayList<>();
+
+    for (OrderProductRequest orderProduct : request.getProducts()) {
+      Product product = productRepository.findById(orderProduct.getId())
+          .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
+
+      validateStock(orderProduct, product);
+      
+      product.reduceStock(orderProduct.getQuantity());
+      orderItems.add(buildOrderItem(order, product, orderProduct));
+    }
+
+    return orderItems;
+  }
+
+  private void validateStock(OrderProductRequest orderProduct, Product product) {
+    if (orderProduct.getQuantity() > product.getStock()) {
+      throw new ServiceException(ServiceExceptionCode.OUT_OF_STOCK_PRODUCT);
+    }
+  }
+
+  private OrderItem buildOrderItem(Order order, Product product, OrderProductRequest orderProduct) {
+    return OrderItem.builder()
+        .product(product)
+        .order(order)
+        .quantity(orderProduct.getQuantity())
+        .price(product.getPrice())
+        .build();
+  }
+
+  private BigDecimal calculateTotalPrice(List<OrderItem> orderItems) {
+    return orderItems.stream()
+        .map(OrderItem::getPrice)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
 
 }
