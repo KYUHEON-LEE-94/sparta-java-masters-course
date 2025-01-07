@@ -2,18 +2,13 @@ package com.lecture.springmasters.domain.order.service;
 
 import com.lecture.springmasters.common.exception.ServiceException;
 import com.lecture.springmasters.common.exception.ServiceExceptionCode;
-import com.lecture.springmasters.domain.order.dto.OrderProductRequest;
 import com.lecture.springmasters.domain.order.dto.OrderRequest;
 import com.lecture.springmasters.entity.Order;
 import com.lecture.springmasters.entity.OrderItem;
-import com.lecture.springmasters.entity.Product;
 import com.lecture.springmasters.entity.User;
-import com.lecture.springmasters.repository.OrderItemRepository;
 import com.lecture.springmasters.repository.OrderRepository;
-import com.lecture.springmasters.repository.ProductRepository;
 import com.lecture.springmasters.repository.UserRepository;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,26 +19,24 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
+  private final OrderProcessService orderProcessService;
+
   private final OrderRepository orderRepository;
-  private final OrderItemRepository orderItemRepository;
   private final UserRepository userRepository;
-  private final ProductRepository productRepository;
 
   @Transactional
   public Order order(OrderRequest request) {
     Order order = save(request.getUserId());
-    List<OrderItem> orderItems = createOrderItems(request, order);
+    List<OrderItem> orderItems = orderProcessService.createOrderItems(request, order);
 
-    BigDecimal totalPrice = calculateTotalPrice(orderItems);
+    BigDecimal totalPrice = orderProcessService.calculateTotalPrice(orderItems);
     order.setTotalPrice(totalPrice);
 
-    orderItemRepository.saveAll(orderItems);
     return order;
   }
 
   public Order save(Long userId) {
-    User orderUser = userRepository.findById(userId)
-        .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_USER));
+    User orderUser = getUser(userId);
 
     return orderRepository.save(Order.builder()
         .user(orderUser)
@@ -51,42 +44,32 @@ public class OrderService {
         .build());
   }
 
-  private List<OrderItem> createOrderItems(OrderRequest request, Order order) {
-    List<OrderItem> orderItems = new ArrayList<>();
+  public Order update(Long orderId, Long userId) {
+    User orderUser = getUser(userId);
 
-    for (OrderProductRequest orderProduct : request.getProducts()) {
-      Product product = productRepository.findById(orderProduct.getId())
-          .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_ORDER));
 
-      validateStock(orderProduct, product);
-      
-      product.reduceStock(orderProduct.getQuantity());
-      orderItems.add(buildOrderItem(order, product, orderProduct));
+    order.setUser(orderUser);
+    order.setTotalPrice(BigDecimal.ZERO);
+    return orderRepository.save(order);
+  }
+
+  public void cancelOrder(Long userId, Long orderId) {
+    User orderUser = getUser(userId);
+
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_ORDER));
+
+    if (orderUser.getId().equals(order.getUser().getId())) {
+      throw new ServiceException(ServiceExceptionCode.NOT_FOUND_USER);
     }
 
-    return orderItems;
+    // TODO : 주문 취소 로직
   }
 
-  private void validateStock(OrderProductRequest orderProduct, Product product) {
-    if (orderProduct.getQuantity() > product.getStock()) {
-      throw new ServiceException(ServiceExceptionCode.OUT_OF_STOCK_PRODUCT);
-    }
+  private User getUser(Long userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_USER));
   }
-
-  private OrderItem buildOrderItem(Order order, Product product, OrderProductRequest orderProduct) {
-    return OrderItem.builder()
-        .product(product)
-        .order(order)
-        .quantity(orderProduct.getQuantity())
-        .price(product.getPrice())
-        .build();
-  }
-
-  private BigDecimal calculateTotalPrice(List<OrderItem> orderItems) {
-    return orderItems.stream()
-        .map(OrderItem::getPrice)
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
-  }
-
-
 }

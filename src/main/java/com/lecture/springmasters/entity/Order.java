@@ -43,6 +43,7 @@ public class Order {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
+  @Setter
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   @JsonBackReference
