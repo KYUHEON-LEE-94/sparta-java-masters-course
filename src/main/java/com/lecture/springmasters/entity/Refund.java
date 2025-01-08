@@ -1,7 +1,11 @@
 package com.lecture.springmasters.entity;
 
+import com.lecture.springmasters.common.constants.RefundStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,40 +25,38 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
-/**
- * packageName    : com.lecture.springmasters.domain.entity fileName       : OrderItem author : LEE
- * KYUHEON date           : 24. 12. 30. description    :
- * =========================================================== DATE              AUTHOR NOTE
- * -----------------------------------------------------------
- * 24. 12. 30.        LEE KYUHEON       최초 생성
- */
 @Entity
 @Getter
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor
-@Table(name = "order_items")
+@Table(name = "refunds")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderItem {
+public class Refund {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  User user;
+
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", nullable = false)
   Order order;
 
-  @ManyToOne
-  @JoinColumn(name = "product_id", nullable = false)
-  Product product;
+  @Setter
+  @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+  BigDecimal totalPrice;
+
+  @Column(name = "reason", nullable = false)
+  String reason;
 
   @Setter
-  @Column(name = "quantity", nullable = false)
-  Integer quantity;
-
-  @Column(name = "price", nullable = false, precision = 10, scale = 2)
-  BigDecimal price;
+  @Column(name = "status", nullable = false)
+  @Enumerated(EnumType.STRING)
+  RefundStatus status;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -65,15 +67,17 @@ public class OrderItem {
   LocalDateTime updatedAt;
 
   @Builder
-  public OrderItem(
+  public Refund(
+      User user,
       Order order,
-      Product product,
-      Integer quantity,
-      BigDecimal price
+      BigDecimal totalPrice,
+      String reason,
+      RefundStatus status
   ) {
+    this.user = user;
     this.order = order;
-    this.product = product;
-    this.quantity = quantity;
-    this.price = price;
+    this.totalPrice = totalPrice;
+    this.reason = reason;
+    this.status = status;
   }
 }
