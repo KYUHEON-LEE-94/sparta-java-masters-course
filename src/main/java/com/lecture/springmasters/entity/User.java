@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -60,4 +61,11 @@ public class User {
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   @JsonManagedReference
   List<Order> orders;
+
+  @Builder
+  public User(String name, String email, String password) {
+    this.name = name;
+    this.email = email;
+    this.password = password;
+  }
 }
