@@ -41,13 +41,13 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
-  @Column(name = "name", nullable = false, length = 50)
+  @Column(name = "username", nullable = false, length = 50)
   String name;
 
   @Column(name = "email", nullable = false)
   String email;
 
-  @Column(name = "password", nullable = false)
+  @Column(name = "password_hash", nullable = false)
   String password;
 
   @Column(name = "created_at", nullable = false, updatable = false)

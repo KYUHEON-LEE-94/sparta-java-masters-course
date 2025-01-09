@@ -9,9 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -60,6 +62,9 @@ public class Order {
   @Column(name = "updated_at")
   @UpdateTimestamp
   LocalDateTime updatedAt;
+
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+  List<OrderItem> orderItems;
 
   @Builder
   public Order(
