@@ -29,7 +29,7 @@ public class OrderProcessService {
       Product product = productRepository.findById(orderProduct.getId())
           .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
 
-      validateStock(orderProduct, product);
+      validateStock(orderProduct.getQuantity(), product.getStock());
       product.reduceStock(orderProduct.getQuantity());
       orderItems.add(buildOrderItem(order, product, orderProduct));
     }
@@ -44,8 +44,8 @@ public class OrderProcessService {
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
-  private void validateStock(OrderProductRequest orderProduct, Product product) {
-    if (orderProduct.getQuantity() > product.getStock()) {
+  private void validateStock(Integer orderQuantity, Integer productStock) {
+    if (orderQuantity > productStock) {
       throw new ServiceException(ServiceExceptionCode.OUT_OF_STOCK_PRODUCT);
     }
   }
