@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 
@@ -92,13 +93,43 @@ public class ProductService {
     product.setPrice(request.getPrice());
     product.setDescription(request.getDescription());
 
-    productRepository.save(product);
+    Product productRequest = productRepository.save(product);
+
+    return ProductResponse.builder()
+        .name(productRequest.getName())
+        .price(productRequest.getPrice())
+        .description(productRequest.getDescription())
+        .build();
+  }
+
+  @CachePut(value = "productCache", key = "#id")
+  public ProductResponse updateWriteBack(Long id, ProductRequest request) {
+    Product product = productRepository.findById(id)
+        .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
+
+    product.setName(request.getName());
+    product.setPrice(request.getPrice());
+    product.setDescription(request.getDescription());
 
     return ProductResponse.builder()
         .name(product.getName())
         .price(product.getPrice())
         .description(product.getDescription())
         .build();
-
   }
+
+  @Async
+  @Transactional
+  public void asyncUpdateWriteBack(Long id, ProductRequest request) {
+    Product product = productRepository.findById(id)
+        .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
+
+    product.setName(request.getName());
+    product.setPrice(request.getPrice());
+    product.setDescription(request.getDescription());
+
+    productRepository.save(product);
+  }
+
 }
+

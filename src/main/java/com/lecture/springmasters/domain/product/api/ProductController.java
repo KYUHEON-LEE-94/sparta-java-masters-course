@@ -64,5 +64,11 @@ public class ProductController {
     return ApiResponse.Success(responses);
   }
 
+  public ApiResponse<ProductResponse> update(@PathVariable Long id,
+      @RequestBody ProductRequest request) {
+    ProductResponse responses = productService.updateWriteBack(id, request);
+    productService.asyncUpdateWriteBack(id, request);
 
+    return ApiResponse.Success(responses);
+  }
 }

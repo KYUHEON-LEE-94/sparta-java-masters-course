@@ -30,4 +30,9 @@ public class CategoryService {
   public List<CategoryProductCountResponse> productCounts(CategoryProductCountRequest search) {
     return categoryQueryRepository.productCount(search);
   }
+
+  public List<Category> getALl() {
+    return categoryRepository.findAll();
+
+  }
 }
