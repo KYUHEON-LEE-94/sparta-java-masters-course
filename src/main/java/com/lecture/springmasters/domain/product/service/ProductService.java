@@ -10,8 +10,11 @@ import com.lecture.springmasters.entity.Product;
 import com.lecture.springmasters.repository.CategoryRepository;
 import com.lecture.springmasters.repository.ProductQueryRepository;
 import com.lecture.springmasters.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,6 +44,8 @@ public class ProductService {
     return true;
   }
 
+  //인자로 받는 id를 key로 하겠다.
+  @Cacheable(value = "productCache", key = "#id")
   public ProductResponse getById(Long id) {
     Product product = productRepository.findById(id)
         .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
@@ -75,5 +80,25 @@ public class ProductService {
       <ProductResponse> search(ProductSearchRequest request) {
     return productQueryRepository.search(request.getName(), request.getMinPrice(),
         request.getMaxPrice());
+  }
+
+  @Transactional
+  @CachePut(value = "productCache", key = "#id")
+  public ProductResponse updateWriteThrough(Long id, ProductRequest request) {
+    Product product = productRepository.findById(id)
+        .orElseThrow(() -> new ServiceException(ServiceExceptionCode.NOT_FOUND_PRODUCT));
+
+    product.setName(request.getName());
+    product.setPrice(request.getPrice());
+    product.setDescription(request.getDescription());
+
+    productRepository.save(product);
+
+    return ProductResponse.builder()
+        .name(product.getName())
+        .price(product.getPrice())
+        .description(product.getDescription())
+        .build();
+
   }
 }

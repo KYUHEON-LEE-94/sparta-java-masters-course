@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
@@ -41,12 +42,15 @@ public class Product {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
+  @Setter
   @Column(name = "name", nullable = false)
   String name;
 
+  @Setter
   @Column(name = "description", columnDefinition = "TEXT")
   String description;
 
+  @Setter
   @Column(name = "price", nullable = false, precision = 10, scale = 2)
   BigDecimal price;
 

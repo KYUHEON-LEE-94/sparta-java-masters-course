@@ -50,6 +50,8 @@ dependencies {
     implementation 'org.flywaydb:flyway-mysql'
     implementation 'org.flywaydb:flyway-core'
 
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
     //Validation
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
     implementation 'org.hibernate.validator:hibernate-validator:7.0.2.Final'
