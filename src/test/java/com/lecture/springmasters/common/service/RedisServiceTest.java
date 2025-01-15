@@ -14,4 +14,24 @@ class RedisServiceTest {
   void redisTypeExample() {
     redisService.redisTypeExample();
   }
+
+  @Test
+  void redisStringExample() {
+    redisService.redisStringExample();
+  }
+
+  @Test
+  void redisListExample() {
+    redisService.redisListExample();
+  }
+
+  @Test
+  void redisHashExample() {
+    redisService.redisHashExample();
+  }
+
+  @Test
+  void redisSortedSetExample() {
+    redisService.redisSortedSetExample();
+  }
 }

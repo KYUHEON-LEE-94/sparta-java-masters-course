@@ -108,4 +108,61 @@ public class RedisService {
 
     log.info("[Sorted Set] topPlayers: {}, player1Score: {}", topPlayers, player1Score);
   }
+
+  public void redisStringExample() {
+    jedis.set("user-{userId}-name", "김철수");
+
+    String userName = jedis.get("user-{userId}-name");
+    log.info("RedisStringExample userName:{}", userName);
+
+    // 데이터 만료 설정 (1시간 후 만료)
+    jedis.expire("user-{userId}-name", 3600); //1시간 = 60분 × 60초 = 3600초
+
+    // 만료 확인
+    Long ttl = jedis.ttl("user-{userId}-name");
+    log.info("RedisStringExample ttl:{} seconds", ttl);
+  }
+
+  public void redisListExample() {
+    jedis.lpush("taskQueue", "Task1", "Task2", "Task3");
+
+    long queueSize = jedis.llen("taskQueue");
+    log.info("queueSize : {}", queueSize);
+
+    String task = jedis.rpop("taskQueue");
+    log.info("Processing task : {}", task);
+
+    // 대기열 남은 작업 확인
+    log.info("taskQueue:{}", jedis.lrange("taskQueue", 0, -1));
+  }
+
+  public void redisHashExample() {
+    jedis.hset("user-456", "name", "John");
+    jedis.hset("user-456", "email", "john@example.com");
+    jedis.hset("user-456", "age", "30");
+
+    String name = jedis.hget("user-456", "name");
+    log.info("RedisHashExample name :{}", name);
+
+    log.info("RedisHashExample user info : {}", jedis.hgetAll("user-456"));
+
+    Map<String, String> userProfile = jedis.hgetAll("user-456");
+    log.info("RedisHashExample email : {}", userProfile.get("email"));
+  }
+
+  public void redisSortedSetExample() {
+    jedis.zadd("leaderboard", 1500, "Player1");
+    jedis.zadd("leaderboard", 2000, "Player2");
+    jedis.zadd("leaderboard", 1200, "Player3");
+
+    List<String> topPlayers = jedis.zrevrange("leaderboard", 0, 1);
+    log.info("RedisSortedSetExample topPlayers Desc : {}", topPlayers);
+
+    List<String> topPlayersAsc = jedis.zrange("leaderboard", 0, 1);
+    log.info("RedisSortedSetExample topPlayers Asc: {}", topPlayersAsc);
+
+    jedis.zincrby("leaderboard", 1000, "Player1");
+    Double score = jedis.zscore("leaderboard", "Player1");
+    log.info("RedisSortedSetExample score : {}", score);
+  }
 }
