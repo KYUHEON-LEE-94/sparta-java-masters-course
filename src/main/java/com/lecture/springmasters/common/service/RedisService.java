@@ -20,11 +20,11 @@ public class RedisService {
   private final Jedis jedis;
   private final ObjectMapper objectMapper;
 
-  public <T> void setObject(String key, T object) {
+  public <T> void setObject(String key, T object, Integer ttlInSeconds) {
 
     try {
       String jsonValue = objectMapper.writeValueAsString(object);
-      jedis.set(key, jsonValue);
+      jedis.setex(key, ttlInSeconds, jsonValue);
     } catch (JsonProcessingException e) {
       log.error("[RedisService] saveObject #{}", e.getMessage());
     }
