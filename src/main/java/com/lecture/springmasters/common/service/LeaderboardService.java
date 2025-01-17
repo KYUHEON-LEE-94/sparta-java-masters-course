@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPubSub;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.resps.Tuple;
 
@@ -81,5 +82,38 @@ public class LeaderboardService {
     log.info("batchUpdateScores Weekly Top Players: {}", weeklyTopPlayers);
   }
 
+  //redis에게 event를 전달
+  public void publishScoreUpdate(String player, Double score) {
+    //pub-sub은 서로 다른 커넥션을 써야해서 아래와 같이 코딩
+    try (Jedis publicJedis = new Jedis("localhost", 6379)) {
+      String message = player + ":" + score;
 
+      //Channel에 message를 넣는다. 이 채널로 이 메시지를 받을 수 있겟군!
+      publicJedis.publish("score_update_channel", message);
+      log.info("publishScoreUpdate {}", message);
+
+    }
+  }
+
+  //Redis 이벤트 구독
+  private final JedisPubSub pubSub = new JedisPubSub() {
+    @Override
+    public void onMessage(String channel, String message) {
+      //메시지를 받으면 실행 되는 영역
+      log.info("Received message: {}", message);
+    }
+  };
+
+  //구독을 받는 메서드
+  public void subscribeToScoreUpdates() {
+    try (Jedis subscribeJedis = new Jedis("localhost", 6379)) {
+      subscribeJedis.subscribe(pubSub, "score_update_channel");
+    }
+  }
+
+  //구독을 끊는 용도
+  public void unsubscribeFromScoreUpdates() {
+    pubSub.unsubscribe();
+    log.info("Unsubscribed from score updates.");
+  }
 }

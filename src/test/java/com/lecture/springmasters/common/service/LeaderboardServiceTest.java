@@ -39,4 +39,24 @@ class LeaderboardServiceTest {
   void batchUpdateScores() {
     leaderboardService.batchUpdateScores();
   }
+
+  @Test
+  void testPubSubFlow() throws InterruptedException {
+    //구독 스레드 실행
+    //subsribe하면 해당 스레드는 블락됨
+    Thread subscribeThread = new Thread(() -> leaderboardService.subscribeToScoreUpdates());
+    subscribeThread.start();
+
+    //구독 준비 시간 확보
+    Thread.sleep(1000);
+
+    leaderboardService.publishScoreUpdate("Player1", 100d);
+
+    // 메시지 처리를 기다림
+    Thread.sleep(1000);
+
+    //구독 종료
+    leaderboardService.unsubscribeFromScoreUpdates();
+
+  }
 }
