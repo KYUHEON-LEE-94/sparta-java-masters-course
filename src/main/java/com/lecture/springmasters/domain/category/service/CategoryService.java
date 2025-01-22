@@ -47,7 +47,7 @@ public class CategoryService {
     String cacheKey = CACHE_KEY_PREFIX + search.hashCode();
 
     List<CategoryProductCountResponse> cachedResponse = redisService.findObject(cacheKey,
-        new TypeReference<List<CategoryProductCountResponse>>() {
+        new TypeReference<>() {
         });
 
     if (!ObjectUtils.isEmpty(cachedResponse)) {
@@ -63,8 +63,7 @@ public class CategoryService {
   }
 
   public List<Category> getAll() {
-    List<Category> categories = categoryRepository.findAll();
-    return categories;
+    return categoryRepository.findAll();
   }
 
   public List<CategoryResponse> findCategoryStruct() {
