@@ -3,11 +3,14 @@ package com.lecture.springmasters.domain.user.service;
 import com.lecture.springmasters.entity.User;
 import com.lecture.springmasters.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +22,8 @@ public class UserBatchService {
   private final UserRepository userRepository;
   private final JdbcTemplate jdbcTemplate;
 
-  private Integer batchSize = 100;
+  @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}")
+  private int batchSize;
 
   @Transactional
   public void batchInsertUsers() {
@@ -46,7 +50,7 @@ public class UserBatchService {
     }
   }
 
-  public void saveAll(List<User> users) {
+  private void saveAll(List<User> users) {
     String sql = "INSERT INTO users (username, email, password_hash, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
 
     List<Object[]> batches = new ArrayList<>();
@@ -67,4 +71,19 @@ public class UserBatchService {
     log.info("query: {} ", sql);
   }
 
+  @Transactional
+  public void batchUpdateUsers() {
+    //2025 - 01 - 20 00분 00시 00초
+    LocalDateTime dateTime = LocalDateTime.of(LocalDate.of(2025, 1, 20), LocalTime.MIN);
+
+    userRepository.bulkUpdateEmail(dateTime);
+  }
+
+  @Transactional
+  public void batchDeleteUsers() {
+
+    LocalDateTime dateTime = LocalDateTime.of(LocalDate.of(2025, 1, 20), LocalTime.MIN);
+
+    userRepository.deleteOldUsers(dateTime);
+  }
 }

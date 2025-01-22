@@ -14,4 +14,14 @@ class UserBatchServiceTest {
   void getAllUsers() {
     userBatchService.batchInsertUsers();
   }
+
+  @Test
+  void batchUpdate() {
+    userBatchService.batchUpdateUsers();
+  }
+
+  @Test
+  void batchDelete() {
+    userBatchService.batchDeleteUsers();
+  }
 }
