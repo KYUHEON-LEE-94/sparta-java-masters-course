@@ -1,5 +1,6 @@
 package com.lecture.springmasters.domain.user.service;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,5 +24,36 @@ class UserServiceTest {
   @Test
   void getUserByRequest() {
     userService.getUserByRequest();
+  }
+
+  @Test
+  void searchUserIf() {
+    userService.searchUserIf();
+  }
+
+  @Test
+  void searchUserChoose() {
+    userService.searchUserChoose();
+  }
+
+  @Test
+  void searchUserForeach() {
+    userService.searchUserForeach();
+  }
+
+  @Test
+  void searchUserPage() {
+    userService.searchUserPage();
+  }
+
+  @Test
+  @Transactional
+  void insertUser() {
+    userService.insertUser();
+  }
+
+  @Test
+  void updateUser() {
+    userService.updateUser();
   }
 }

@@ -6,7 +6,8 @@
   <select id="selectUserById" parameterType="long" resultType="hashmap">
     SELECT *
     FROM users
-    WHERE id = #{id} LIMIT 1
+    WHERE id = #{id}
+    LIMIT 1
   </select>
 
   <select id="selectUserByEmail" parameterType="string"
@@ -22,7 +23,8 @@
     SELECT *
     FROM users
     WHERE username LIKE CONCAT('%', #{name}, '%')
-      AND #{createdAt} > created_at LIMIT 1
+      AND #{createdAt} > created_at
+    LIMIT 1
   </select>
 
   <select id="selectUserByNameAndCreatedAt" parameterType="map"
@@ -30,7 +32,8 @@
     SELECT *
     FROM users
     WHERE username LIKE CONCAT('%', #{name}, '%')
-      AND #{createdAt} > created_at LIMIT 1
+      AND #{createdAt} > created_at
+    LIMIT 1
   </select>
 
   <select id="selectUserByRequest"
@@ -39,7 +42,70 @@
     SELECT *
     FROM users
     WHERE username LIKE CONCAT('%', #{name}, '%')
-      AND email LIKE CONCAT('%', #{email}, '%') LIMIT 1
+      AND email LIKE CONCAT('%', #{email}, '%')
+    LIMIT 1
   </select>
+
+  <select id="searchUserIf"
+    parameterType="com.lecture.springmasters.domain.user.dto.UserRequest"
+    resultType="com.lecture.springmasters.domain.user.dto.UserDto">
+    SELECT *
+    FROM users
+    WHERE username LIKE CONCAT('%', #{name}, '%')
+    <where>
+      <if test="email != null">AND email LIKE CONCAT('%', #{email}, '%')</if>
+    </where>
+  </select>
+
+  <select id="searchUserChoose"
+    parameterType="com.lecture.springmasters.domain.user.dto.UserRequest"
+    resultType="com.lecture.springmasters.domain.user.dto.UserDto">
+    SELECT *
+    FROM users
+    <where>
+      <choose>
+        <when test="email != null">email LIKE CONCAT('%', #{email}, '%')</when>
+        <when test="name != null">username LIKE CONCAT('%', #{name}, '%')</when>
+        <otherwise>NOW() > created_at</otherwise>
+      </choose>
+    </where>
+  </select>
+
+  <select id="searchUserForeach"
+    parameterType="com.lecture.springmasters.domain.user.dto.UserRequest"
+    resultType="com.lecture.springmasters.domain.user.dto.UserDto">
+    SELECT * FROM users WHERE name IN
+    <foreach collection="userRequests" item="userRequest" open="(" separator="," close=")">
+      #{userRequest.name}
+    </foreach>
+  </select>
+
+  <select id="searchUsersTotal" resultType="long">
+    SELECT COUNT(*)
+    FROM users
+  </select>
+
+  <select id="searchUsersPage" parameterType="map"
+    resultType="com.lecture.springmasters.domain.user.dto.UserDto">
+    SELECT *
+    FROM users
+    ORDER BY id
+    LIMIT #{limit} OFFSET #{offset}
+  </select>
+
+  <insert id="insertUser" parameterType="list">
+    INSERT INTO users (username, email, password_hash, created_at, updated_at)
+    VALUES
+    <foreach collection="userRequests" item="userRequest" separator=",">
+      (#{userRequest.name}, #{userRequest.email}, #{userRequest.password}, CURRENT_TIMESTAMP,
+      CURRENT_TIMESTAMP)
+    </foreach>
+  </insert>
+
+  <update id="updateUsersEmails">
+    UPDATE users
+    SET email = '탈퇴한 사용자'
+    WHERE #{createdAt} > created_at
+  </update>
 
 </mapper>

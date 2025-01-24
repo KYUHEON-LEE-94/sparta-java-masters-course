@@ -21,4 +21,18 @@ public interface UserMapperRepository {
   UserDto selectUserByMap(Map<String, Object> params);
 
   UserDto selectUserByRequest(UserRequest userRequest);
+
+  List<UserDto> searchUserIf(UserRequest userRequest);
+
+  List<UserDto> searchUserChoose(UserRequest userRequest);
+
+  List<UserDto> searchUserForeach(List<UserRequest> userRequests);
+
+  Long searchUsersTotal();
+
+  List<UserDto> searchUsersPage(@Param("limit") Integer limit, @Param("offset") Integer offset);
+
+  void insertUser(List<UserRequest> userRequests);
+
+  void updateUsersEmails(@Param("createdAt") LocalDateTime createdAt);
 }

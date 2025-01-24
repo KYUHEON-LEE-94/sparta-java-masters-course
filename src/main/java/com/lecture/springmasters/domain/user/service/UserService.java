@@ -11,6 +11,7 @@ import com.lecture.springmasters.entity.User;
 import com.lecture.springmasters.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,77 @@ public class UserService {
 
     UserDto user = userMapperRepository.selectUserByRequest(userRequest);
     log.info("user : {}", user.toString());
+  }
+
+  @Transactional
+  public void searchUserIf() {
+    UserRequest userRequest = UserRequest.builder()
+        .name("김철수3")
+        .build();
+
+    List<UserDto> user = userMapperRepository.searchUserIf(userRequest);
+    log.info("user : {}", user.toString());
+  }
+
+  @Transactional
+  public void searchUserChoose() {
+    UserRequest userRequest = UserRequest.builder()
+        .email("4@naver.com")
+        .name("김철수4")
+        .build();
+
+    List<UserDto> user = userMapperRepository.searchUserChoose(userRequest);
+    log.info("user : {}", user.toString());
+  }
+
+  @Transactional
+  public void searchUserForeach() {
+    List<UserRequest> userRequests = new ArrayList<>();
+
+    userRequests.add(UserRequest.builder()
+        .email("5@naver.com")
+        .name("김철수5")
+        .build());
+
+    userRequests.add(UserRequest.builder()
+        .email("6@naver.com")
+        .name("김철수6")
+        .build());
+
+    List<UserDto> user = userMapperRepository.searchUserForeach(userRequests);
+    log.info("user : {}", user.toString());
+  }
+
+  @Transactional
+  public void searchUserPage() {
+    Long total = userMapperRepository.searchUsersTotal();
+    List<UserDto> users = userMapperRepository.searchUsersPage(10, 0);
+
+    log.info("total : {} user : {}", total, users.toString());
+  }
+
+  @Transactional
+  public void insertUser() {
+    List<UserRequest> userRequests = new ArrayList<>();
+
+    userRequests.add(UserRequest.builder()
+        .email("#!@naver.com")
+        .name("김철수#!")
+        .password("123456")
+        .build());
+
+    userRequests.add(UserRequest.builder()
+        .email("!Q@#@naver.com")
+        .name("김철수!Q@#")
+        .password("123456")
+        .build());
+
+    userMapperRepository.insertUser(userRequests);
+  }
+
+  @Transactional
+  public void updateUser() {
+    userMapperRepository.updateUsersEmails(LocalDateTime.now());
   }
 
   //JPA
