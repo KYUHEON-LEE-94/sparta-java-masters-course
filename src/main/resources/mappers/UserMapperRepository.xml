@@ -9,4 +9,37 @@
     WHERE id = #{id} LIMIT 1
   </select>
 
+  <select id="selectUserByEmail" parameterType="string"
+    resultType="com.lecture.springmasters.domain.user.dto.UserDto">
+    SELECT *
+    FROM users
+    WHERE email = #{email}
+
+  </select>
+
+  <select id="selectUserByMap" parameterType="map"
+    resultType="com.lecture.springmasters.domain.user.dto.UserDto">
+    SELECT *
+    FROM users
+    WHERE username LIKE CONCAT('%', #{name}, '%')
+      AND #{createdAt} > created_at LIMIT 1
+  </select>
+
+  <select id="selectUserByNameAndCreatedAt" parameterType="map"
+    resultType="com.lecture.springmasters.domain.user.dto.UserDto">
+    SELECT *
+    FROM users
+    WHERE username LIKE CONCAT('%', #{name}, '%')
+      AND #{createdAt} > created_at LIMIT 1
+  </select>
+
+  <select id="selectUserByRequest"
+    parameterType="com.lecture.springmasters.domain.user.dto.UserRequest"
+    resultType="com.lecture.springmasters.domain.user.dto.UserDto">
+    SELECT *
+    FROM users
+    WHERE username LIKE CONCAT('%', #{name}, '%')
+      AND email LIKE CONCAT('%', #{email}, '%') LIMIT 1
+  </select>
+
 </mapper>
