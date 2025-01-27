@@ -17,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
   @Query("SELECT o FROM User o JOIN FETCH o.orders")
   List<Product> findAllWithOrder();
+
+  List<Product> findAllByStockGreaterThan(Integer stock);
 }

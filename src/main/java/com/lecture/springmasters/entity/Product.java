@@ -54,6 +54,7 @@ public class Product {
   @Column(name = "price", nullable = false, precision = 10, scale = 2)
   BigDecimal price;
 
+  @Setter
   @Column(name = "stock", nullable = false)
   Integer stock;
 
