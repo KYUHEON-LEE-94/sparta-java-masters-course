@@ -21,6 +21,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.Version;
 
 /**
  * packageName    : com.lecture.springmasters.domain.entity fileName       : Product author : LEE
@@ -69,6 +70,9 @@ public class Product {
   @Column(name = "updated_at")
   @UpdateTimestamp
   LocalDateTime updatedAt;
+
+  @Version  // 버전 필드 추가
+  private Integer version;
 
   @Builder
   public Product(
